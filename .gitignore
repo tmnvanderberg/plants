@@ -1,0 +1,17 @@
+# Secrets
+secrets.yaml
+.env
+*.env.local
+
+# ESPHome build artifacts
+.esphome/
+
+# Editor / OS
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
+
+# Backend volumes (only if you switch from named volumes to bind mounts)
+backend/data/

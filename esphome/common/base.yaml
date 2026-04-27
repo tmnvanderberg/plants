@@ -1,0 +1,22 @@
+# Shared config — included by every device via packages: { base: !include common/base.yaml }
+# Devices must define ${device_name} and ${friendly_name} substitutions before importing.
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${friendly_name} Fallback"
+    password: !secret fallback_password
+
+captive_portal:
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password

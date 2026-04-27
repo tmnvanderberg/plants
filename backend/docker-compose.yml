@@ -1,0 +1,62 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"   # websockets, handy for browser debug clients
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_USER}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: plants
+      DOCKER_INFLUXDB_INIT_BUCKET: sensors
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - influxdb
+
+  # MQTT -> InfluxDB bridge. Uncomment + add ./telegraf/telegraf.conf once Phase B
+  # nodes start publishing to plants/<device>/<sensor>.
+  # telegraf:
+  #   image: telegraf:1.30
+  #   container_name: telegraf
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+  #   environment:
+  #     INFLUX_TOKEN: ${INFLUX_TOKEN}
+  #   depends_on:
+  #     - mosquitto
+  #     - influxdb
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:
+  influxdb_data:
+  grafana_data:
