@@ -1,0 +1,110 @@
+# Per-pot inventory + per-species watering profiles.
+# Source of truth for dashboard targets, alerting thresholds, and the
+# "how much to water" recommendation.
+#
+# Two parts:
+#   1) `profiles` — named reusable profiles, each plant references one
+#   2) `pots`     — physical inventory: which board is in which pot, calibration,
+#                   profile assignment
+
+# ---------------------------------------------------------------------------
+# Profiles
+#
+# style: cycle
+#   The plant prefers a wet-then-dry cycle. We trigger a watering alert when
+#   moisture drops below `trigger_water_below_pct`, ask for enough water to
+#   reach `saturate_to_pct`, then expect a slow dry-down over a known span.
+#   Examples: succulents, ZZ, snake plant, hoya, most cacti.
+#
+# style: constant
+#   The plant prefers steady moisture. We alert if it leaves the
+#   `band: [min, max]` for longer than `alarm_window_h`, and recommend a
+#   small top-up rather than a deep soak.
+#   Examples: ferns, calatheas, fittonia, carnivores (with own water table).
+# ---------------------------------------------------------------------------
+
+profiles:
+
+  succulent:
+    description: "Cacti, succulents, ZZ, snake plant — full dry-down between waterings."
+    style: cycle
+    trigger_water_below_pct: 5
+    saturate_to_pct: 70
+    expected_cycle_days: [10, 28]
+    notes: "Roots rot fast if watered while still wet. Err on the dry side."
+
+  drought-tolerant:
+    description: "Hoya, peperomia, jade — let dry mostly, not bone-dry."
+    style: cycle
+    trigger_water_below_pct: 15
+    saturate_to_pct: 65
+    expected_cycle_days: [7, 14]
+
+  houseplant:
+    description: "Most common houseplants — pothos, monstera, philodendron, ficus, dracaena."
+    style: cycle
+    trigger_water_below_pct: 25
+    saturate_to_pct: 65
+    expected_cycle_days: [4, 10]
+    notes: "Top inch dry → water deeply. Standard 'finger test' equivalent."
+
+  thirsty:
+    description: "Tomatoes, basil, mint, peace lily — want regular water, can wilt fast."
+    style: cycle
+    trigger_water_below_pct: 35
+    saturate_to_pct: 70
+    expected_cycle_days: [2, 5]
+
+  constant-moist:
+    description: "Ferns, calatheas, fittonia — never fully dry."
+    style: constant
+    band: [50, 75]
+    alarm_below_pct: 40
+    alarm_above_pct: 80          # post-watering spikes regularly hit 75–80 — only alarm above
+    alarm_dry_h:  2              # plant won't wilt in 2h, but trend is real by then
+    alarm_wet_h:  24             # root rot is days; brief saturation isn't an emergency
+    notes: "Stress shows fast (crispy edges). Mist + steady soil."
+
+  bog:
+    description: "Carnivores, rice-paddy plants — sit in saturated medium."
+    style: constant
+    band: [80, 100]
+    alarm_below_pct: 70
+    alarm_above_pct: ~           # bog plants don't have an upper limit
+    alarm_dry_h:  8
+    alarm_wet_h:  ~
+    notes: "Distilled / rainwater only for carnivores."
+
+# ---------------------------------------------------------------------------
+# Pots
+#
+# Per pot, fill in:
+#   plant         common name
+#   species       Latin (optional but useful for sanity-checks)
+#   profile       one of the keys under `profiles:` above
+#   pot_volume_l  liters of soil — drives watering volume math
+#   sensor        per-probe calibration (dry/wet endpoints in volts)
+# ---------------------------------------------------------------------------
+
+pots:
+  - id: 01
+    node: plant-node-01
+    mac: e8:3d:c1:85:d0:6c
+    plant: Rattlesnake plant
+    species: Goeppertia insignis        # formerly Calathea lancifolia
+    profile: constant-moist
+    pot_volume_l: 1.5                   # rough — measure by filling once for accurate water-volume math
+    location: indoor
+    sensor:
+      dry_v: 2.704
+      wet_v: 0.936
+    notes: |
+      Brown leaf-tips visible at intake = historical winter damage (dry indoor air
+      during NL heating season, ~30% RH). With heaters off for spring, new growth
+      should come in clean.
+
+      NL tap water is fine for this plant: no residual chlorine, no fluoridation,
+      Vitens water in Zwolle is ~8 °dH (moderately soft). Rainwater is a bonus,
+      not required. Re-pot every 1–2 years to reset slow mineral accumulation.
+
+      Watch humidity again next October when heaters come back on.

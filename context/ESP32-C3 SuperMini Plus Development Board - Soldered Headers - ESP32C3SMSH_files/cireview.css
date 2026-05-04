@@ -1,0 +1,773 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.cifa{
+    font-size:16px;
+    width:1em;
+    height:1em;
+    margin-right:2px
+}
+ .cirating-input{
+    padding-top:7px
+}
+ .cireview-wrap .cireview-list{
+    border:1px solid #ddd;
+    margin-bottom:15px;
+    padding:0 15px;
+    word-wrap: break-word;
+}
+ #posneg-cireview .cireview-list{
+    min-height: 240px;
+     margin-bottom: 0;
+     padding: 15px;
+}
+ .cireview-wrap .cireview-aggerate{
+    border:1px solid #f6f6f8;
+    border-bottom:5px solid rgba(0,0,0,0.1);
+    margin-bottom:15px;
+    padding:0 15px;
+    background:#f6f6f8
+}
+ .cireview-wrap label.control-label{
+    font-weight:700;
+    padding:0;
+    text-align:left
+}
+ .cireview-wrap .cireview-aggerate-title{
+    background:rgba(0,0,0,0.1);
+    padding:10px 15px
+}
+ .cireview-wrap .giverating{
+    cursor:pointer
+}
+ .cireview-wrap .cireview-grid{
+    border:1px solid #ddd;
+    margin-bottom:15px;
+    padding:10px 15px;
+    max-height:450px;
+    height:250px;
+    overflow-y:auto
+}
+ .cireview-wrap .cireviews h3{
+    margin-top:0;
+    font-size:15px;
+    font-weight:600;
+    text-transform:uppercase;
+    margin-bottom:10px
+}
+ .cireview-wrap .cireviews h4{
+    margin-bottom:7px
+}
+ .journal-wrap .cireview-wrap .cireviews h4{
+    font-size: 12px;
+}
+ .cireview-wrap .cireviews .all-rating ul{
+    margin-bottom:10px
+}
+ .cireview-wrap .cireviews .all-rating ul li:after,.cireview-wrap .cireviews .all-rating ul li:before{
+    display:table;
+    content:" "
+}
+ .cireview-wrap .cireviews .all-rating ul li:after{
+    clear:both
+}
+ .cireview-wrap .cireviews .all-rating ul li label{
+    float:left
+}
+ .cireview-wrap .cireviews a{
+    color:#444
+}
+ .cireview-wrap .cireviews .fa-stack{
+    width:1.5em;
+    height:2em
+}
+ .cireview-wrap .cireviews .average li{
+    margin-bottom:5px
+}
+ .cireview-wrap .cireviews .average.final-avrge .control-label{
+    display:block;
+    text-align:center;
+    font-size:18px;
+    font-weight:400;
+    margin-bottom:8px;
+    margin-top:15px
+}
+ .cireview-wrap .cireviews .average.final-avrge .fa-stack{
+    width:3.5em;
+    height:3em
+}
+ .cireview-wrap .cireviews .average.final-avrge .fa-stack i{
+    font-size:24px;
+    color:#FC0
+}
+ .cireview-wrap .cireviews .average.final-avrge .ciratingcount{
+    font-size:15px;
+    font-weight:700
+}
+ .cireview-wrap .cireviews .all-rating-wrap{
+    padding-top:15px;
+    padding-bottom:15px;
+    word-wrap:break-word
+}
+ .cireview-wrap .cireviews .all-rating-wrap:first-child{
+    border-left:none
+}
+ #cireview-customerimages{
+    border: 1px solid #ddd;
+    padding: 15px;
+    background: #efefef;
+    margin-bottom: 15px;
+}
+ #cireview-customerimages h3{
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+ #cireview-customerimages .cigallery {
+    cursor: pointer;
+}
+ .cigallery_modal h4 {
+    margin-top: 0;
+}
+ .cigallery_btns .nextButton, .cigallery_btns .prevButton {
+    position: absolute;
+     top: 50%;
+     z-index: 1;
+     color: #fff;
+}
+ .cigallery_btns .nextButton i, .cigallery_btns .prevButton i{
+    font-size: 25px;
+}
+ .cigallery_btns .nextButton {
+    right: 5%;
+}
+ .cigallery_btns .prevButton {
+    left: 5%;
+}
+ .cigallery_modal.customerimage .cigalleryimg {
+    background: #333;
+     position: relative;
+     text-align: center;
+}
+ .cigallery_modal.customerimage .cigalleryimg .cigallery_img {
+    width: 70%;
+     display: inline-block;
+}
+ .cireview-posneg{
+    padding: 15px;
+    border:1px solid #ddd;
+    margin-bottom: 15px;
+    background-color: rgba(42, 255, 10, 0.18);
+}
+ .oc2 .cireview-wrap .cireview-posneg .cireview-list, .oc20 .cireview-wrap .cireview-posneg .cireview-list, .oc30 .cireview-wrap .cireview-posneg .cireview-list{
+    margin-bottom: 0;
+    padding: 15px;
+}
+ .cireview-wrap .cireview-posneg h4{
+    font-weight: 600;
+    font-size: 14px;
+}
+ @media(min-width: 768px) {
+     .cireview-wrap .cireviews .all-rating .stars{
+        float:right
+    }
+     .cireview-wrap .cireviews .all-rating-wrap{
+        border-left:1px solid #ddd
+    }
+}
+ @media(max-width: 767px) {
+     .cireview-wrap .cireviews .all-rating .stars{
+        display:inline-block
+    }
+     .cireview-wrap .cireviews .all-rating-wrap{
+        border-top:1px solid #ddd
+    }
+     .cireview-wrap .cireviews .all-rating-wrap:first-child{
+        border-top:none
+    }
+}
+ .cireview-wrap .cireviews .vote-action .btn{
+    padding:3px;
+    font-size:13px;
+    border:none;
+    box-shadow:unset;
+    -webkit-box-shadow:unset
+}
+ .cireview-wrap .cireviews .vote-action .no-btn{
+    border:2px solid #ed4747;
+    padding:1px 8px;
+    background-color:transparent
+}
+ .cireview-wrap .cireviews .vote-action .no-btn,.cireview-wrap .cireviews .vote-action .no-btn i{
+    color:#ed4747
+}
+ .cireview-wrap .cireviews .vote-action .yes-btn{
+    border:2px solid #72b372;
+    padding:1px 8px;
+    background-color:transparent
+}
+ .cireview-wrap .cireviews .vote-action .yes-btn i,.cireview-wrap .cireviews .vote-action .no-btn i{
+    font-size:18px
+}
+ .cireview-wrap .cireviews .vote-action .yes-btn,.cireview-wrap .cireviews .vote-action .yes-btn i{
+    color:#72b372
+}
+ .cireview-abuse{
+    text-align:right;
+    cursor:pointer
+}
+ .cireviewcomment{
+    padding:20px 15px;
+    background:#f6f6f8;
+    min-height:80px;
+    margin-bottom:10px
+}
+ .cireviewcomment label.control-label{
+    font-weight:600
+}
+ .cireview-product-thumb img{
+    display:inline
+}
+ .cireview-product-thumb{
+    padding:15px 20px;
+    text-align:center
+}
+ .cireviewattach_images{
+    border-top:1px solid #ddd;
+    padding-top:10px;
+    padding-left:0;
+    list-style:none
+}
+ @media(min-width: 768px) {
+     .flex{
+        display:flex
+    }
+}
+ #cireview .cireview-list{
+    padding:15px;
+    word-wrap:break-word
+}
+ .cireview-product-thumb .price{
+    color:#444
+}
+ .cireview-product-thumb .price-new{
+    font-weight:600
+}
+ .cireview-product-thumb .price-old{
+    color:#999;
+    text-decoration:line-through;
+    margin-left:10px
+}
+ .cireview-product-thumb .price-tax{
+    color:#999;
+    font-size:12px;
+    display:block
+}
+ #form-cireview .ciattachupload button{
+    margin-bottom:15px
+}
+ .journal-wrap .cireview-wrap .cireview-aggerate-title{
+    margin:0 -15px
+}
+ .journal-wrap .j-margin{
+    padding-top:15px;
+    padding-bottom:15px
+}
+ .journal-wrap p{
+    margin-bottom:10px!important
+}
+
+/*.journal-wrap label {display: block;}*/
+.journal-wrap .cireview-form h2{
+    margin:10px 0
+}
+ .journal-wrap .hidden{
+    display:none!important
+}
+ .journal-wrap .text-right{
+    text-align:right
+}
+ .journal-wrap .text-left{
+    text-align:left
+}
+ .journal-wrap .text-center{
+    text-align:center
+}
+ .journal-wrap .buttons{
+    display:block;
+    width:100%;
+    padding:0;
+    background:none
+}
+ .oc2 .alert, .oc20 .alert, .oc30 .alert {
+    position: relative;
+}
+ .journal-wrap .form-group:before,.journal-wrap .form-group:after{
+    display:table;
+    content:" "
+}
+ .journal-wrap .form-group:after{
+    clear:both
+}
+ .ciattachupload:before,.ciattachupload:after{
+    display:table;
+    content:" "
+}
+ .ciattachupload:after{
+    clear:both
+}
+ .ciattachupload{
+    margin:10px 0
+}
+ .oc2 #tab-review .journal-wrap .ciratings label, .oc20 #tab-review .journal-wrap .ciratings label, .oc30 #tab-review .journal-wrap .ciratings label, .journal-wrap .ciratings label{
+    width:25%
+}
+ .oc2 #tab-review .journal-wrap .ciratings label + div, .oc20 #tab-review .journal-wrap .ciratings label + div, .oc30 #tab-review .journal-wrap .ciratings label + div, .journal-wrap .ciratings label + div{
+    width:70%
+}
+ .oc2 #tab-review .text-right, .oc20 #tab-review .text-right, .oc30 #tab-review .text-right {
+    text-align: right
+}
+ .oc2 #tab-review .text-left, .oc20 #tab-review .text-left, .oc30 #tab-review .text-left {
+    text-align: left
+}
+ .oc2 #tab-review .text-center, .oc20 #tab-review .text-center, .oc30 #tab-review .text-center {
+    text-align: center
+}
+ .oc2 #tab-review .pull-right, .oc20 #tab-review .pull-right, .oc30 #tab-review .pull-right {
+    float: right
+}
+ .oc2 #tab-review .pull-left, .oc20 #tab-review .pull-left, .oc30 #tab-review .pull-left {
+    float: left
+}
+ .oc2 .journal-wrap .list-inline > li, .oc20 .journal-wrap .list-inline > li, .oc30 .journal-wrap .list-inline > li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px
+}
+ .oc2 .journal-wrap .list-inline, .oc20 .journal-wrap .list-inline, .oc30 .journal-wrap .list-inline {
+    padding-left: 0;
+    margin-left: -5px;
+    list-style: none
+}
+ .oc2 #tab-review .list-inline > li, .oc20 #tab-review .list-inline > li, .oc30 #tab-review .list-inline > li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px
+}
+ .oc2 #tab-review .list-inline, .oc20 #tab-review .list-inline, .oc30 #tab-review .list-inline {
+    padding-left: 0;
+    margin-left: -5px;
+    list-style: none
+}
+ .oc2 #tab-review .form-group label, .oc20 #tab-review .form-group label, .oc30 #tab-review .form-group label {
+    width: initial !important;
+    padding-right: 20px !important;
+}
+ .oc2 #tab-review .form-group label + div, .oc20 #tab-review .form-group label + div, .oc30 #tab-review .form-group label + div {
+    margin: 0;
+}
+ .journal-wrap .cireview-wrap .cireview-list{
+    background:#fff
+}
+ .journal-wrap .hide {
+    display: none
+}
+ .journal-wrap .row > div {
+    padding: 15px;
+     position: relative
+}
+ .oc2 #tab-review .row > div, .oc20 #tab-review .row > div, .oc30 #tab-review .row > div {
+    padding: 15px;
+     position: relative
+}
+ .oc2 #tab-review .row, .oc20 #tab-review .row, .oc30 #tab-review .row {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+ .journal-wrap .cireview-wrap .cireviews .all-rating-wrap{
+    padding:15px
+}
+ .journal-wrap .img-responsive{
+    display:inline-block;
+    max-width:100%;
+    height:auto
+}
+ .journal-wrap .list-inline{
+    margin:0;
+    padding:0;
+    list-style:none
+}
+ .journal-wrap .list-inline li{
+    display:inline-block
+}
+ .oc2 #tab-review .journal-wrap .fa-stack, .oc20 #tab-review .journal-wrap .fa-stack, .oc30 #tab-review .journal-wrap .fa-stack{
+    margin-bottom:15px
+}
+ #cireview-graph{
+    margin-bottom:15px
+}
+ #cireview-graph .n-star{
+    display:inline-block;
+    vertical-align:top;
+    width:100px
+}
+ #cireview-graph .cireviewgraph{
+    display:inline-block;
+    vertical-align:middle
+}
+ .cireview-infomsg{
+    display:inline-block;
+    text-align:center
+}
+ #cireview-graph li{
+    color:#0066c0;
+    cursor:pointer
+}
+ #cireview-graph li:hover .n-star,#cireview-graph li:hover .progress-value{
+    text-decoration:underline
+}
+ #cireview-graph li:hover .rating-value{
+    text-decoration:underline
+}
+ #cireview-graph .progress{
+    display:inline-block;
+    margin-bottom:0;
+    height:10px;
+    box-shadow:inset 0 0 5px rgba(0,0,0,.5);
+    -webkit-box-shadow:inset 0 0 5px rgba(0,0,0,.5);
+    -moz-box-shadow:inset 0 0 5px rgba(0,0,0,.5);
+    border-radius:0
+}
+ #cireview-graph .progress .progress-bar{
+    background-color:#338714
+}
+ #cireview-graph .progress-value{
+    display:inline-block;
+    vertical-align:top;
+    margin-left:15px
+}
+ #cireview-graph .cireview-stars .rating-value{
+    display:inline-block;
+    vertical-align:top;
+    margin-left:8px;
+    text-align:left
+}
+ #cireview-graph .cireview-stars .rating-stars{
+    display:inline-block;
+    margin-bottom:0;
+    height:20px;
+    border-radius:0;
+    text-align:left
+}
+ #cireview-graph .cireview-stars .fa-star{
+    color:#338714;
+    font-size:20px
+}
+ #cireview-graph .cireview-stars .fa-star + .fa-star-o{
+    color:#338714;
+    font-size:20px
+}
+ #cireview-graph .cireview-stars .fa-star-o{
+    font-size:20px
+}
+ #cireview-graph .cireview-stars .fa-stack{
+    font-size:10px
+}
+ .ciratingcount{
+    margin-left:5px;
+    vertical-align:middle
+}
+ .cireview-column-wrap .img-responsive{
+    width:100%
+}
+ .cireview-heading{
+    margin-top:0;
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:20px
+}
+ .cireview-column-wrap .fa-stack{
+    width:1.5em;
+    height:1.5em
+}
+ .cireview-column-wrap .cistars{
+    display:inline-block
+}
+ .cireview-column-wrap .reviewtitle{
+    display:inline-block;
+    vertical-align:middle;
+    font-weight:600;
+    font-size:13px;
+    color:#333;
+    margin-left:5px
+}
+ .cireview-column-wrap .reviewtitle a{
+    color:#333
+}
+ .cireview-column-wrap p{
+    margin-bottom:2px;
+    color:#000;
+    width:100%;
+    word-wrap:break-word
+}
+ .flex{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:flex-start
+}
+ .cireview-column-wrap .cireview-grid,.cireview-column-wrap .cireview-list{
+    margin-bottom:20px
+}
+ .cireview-column-wrap .cipublished{
+    color:#9c9c9c;
+    width:100%
+}
+ .cireview-column-wrap .ciproductname{
+    color:#000;
+    font-size:14px;
+    font-weight:600;
+    width:100%
+}
+ .cireview-column-wrap .ciproductname a{
+    color:#000
+}
+ .cireview-column-wrap .cireview-grid .all-rating-wrap{
+    margin-bottom:15px;
+    align-items:flex-start
+}
+ .cireview-column-wrap .cireview-grid .all-rating-wrap .inrating-wrap{
+    border:1px solid #d4bdbd;
+    padding:10px 15px;
+    background:#fbfbfb;
+    min-height:150px
+}
+.cireview-column-wrap .cireview-grid .cireview-product-thumb{
+    width: 20%;
+    display: inline-block;
+    padding: 0 15px 0 0;
+    vertical-align: top;
+}
+.cireview-column-wrap .cireview-grid .cireview-detail{
+    display: inline-block;
+    min-height: 210px;
+    width: 78%;
+}
+ .cireview-column-wrap .cireview-grid .reviewtitle{
+    display:block;
+    margin-left:0;
+    margin-top:5px
+}
+ .cireview-column-wrap .cireview-grid .cistars{
+    display:block
+}
+ .verified{
+    display:inline-block;
+    background:#16a816;
+    color:#fff;
+    padding:1px 6px;
+    border-radius:5px;
+    margin-bottom:10px;
+    font-size:10px
+}
+ .verified i{
+    font-size:11px
+}
+ .ci-rfilters .btn-primary{
+    background:#37679e;
+    border-color:#37679e;
+    font-size:12px;
+    box-shadow:none;
+    margin-bottom:5px;
+    min-width:130px;
+    border-radius:0;
+    margin-right:-3px;
+    display:inline-block
+}
+ .ci-rfilters .btn-primary.green{
+    background:rgba(92,184,92,0.8);
+    border-color:#5cb85c
+}
+ .ci-rfilters .btn-primary.green.active,.ci-rfilters .btn-primary.orange.active,.ci-rfilters .btn-primary.purple.active,.ci-rfilters .btn-primary.grey.active,.ci-rfilters .btn-primary.pink.active{
+    background:#000;
+    border-color:#000
+}
+ .ci-rfilters .btn-primary.orange{
+    background:rgba(236,151,31,1);
+    border-color:rgba(236,151,31,1)
+}
+ .ci-rfilters .btn-primary.purple{
+    background:#c56bdb;
+    border-color:#c56bdb
+}
+ .ci-rfilters .btn-primary.pink{
+    background:#cf3c6b;
+    border-color:#cf3c6b
+}
+ .ci-rfilters .btn-primary.grey{
+    background:#747575;
+    border-color:#747575
+}
+ .ci-rfilters .btn-primary.red{
+    background:#f05f4e;
+    border-color:#f05f4e
+}
+ .cireview_filters .btn-primary.active{
+    background:#234874
+}
+ .cireview-top{
+    border:1px solid #ddd;
+    border-left:none
+}
+ .cireview-top .cireview-inner{
+    border-left:5px solid #FC0;
+    position:relative;
+    padding-top:10px
+}
+ .cireview-top .cireview-inner .citop-count{
+    width:30px;
+    height:30px;
+    text-align:center;
+    position:absolute;
+    left:-17px;
+    background:#FC0;
+    border-radius:50%;
+    color:#fff;
+    font-weight:700;
+    font-size:17px;
+    line-height:26px;
+    top:15px
+}
+ .cireview-top .citop-heading{
+    background:rgba(0,0,0,0.1);
+    padding:10px 15px;
+    font-size:15px;
+    font-weight:600;
+    color:#444;
+    text-transform:uppercase
+}
+ .cireview-top .outof{
+    text-align:center;
+    color:#FC0;
+    padding:10px
+}
+ .cireview-top .outof .trate{
+    font-size:60px;
+    line-height:normal;
+    font-weight:700
+}
+ .cireview-top .outof .trate sup{
+    top:-2.5em;
+    font-size:16px;
+    color:#696868
+}
+ .cireview-top .outof .top-rating i{
+    font-size:24px
+}
+ .cireview-top .citop-reviewtitle{
+    font-size:15px;
+    padding-bottom:5px;
+    font-weight:700
+}
+ .cireview-top .ci-custom-mat{
+    padding:10px
+}
+ .cireview-top .citop-description{
+    font-size:14px;
+    line-height:24px;
+    padding-bottom:5px
+}
+ .cireview-top .author{
+    display:inline-block;
+    font-weight:700;
+    font-size:14px
+}
+ .cireview-top .ci-date{
+    display:inline-block;
+    padding-left:10px
+}
+ #cireview-posnegreviews .cirating-posnegall{
+    cursor:pointer;
+    font-size:12px;
+    margin-bottom:10px;
+     display: block;
+}
+ .ciname_fl{
+    width:50px;
+    height:50px;
+    background:#c56bdb;
+    color:#fff;
+    border-radius:50%;
+    -webkit-border-radius:50%;
+    padding:12px;
+    line-height:25px;
+    display:inline-block;
+    text-align:center
+}
+ @media(min-width: 768px) {
+     #cireview-graph .cireviewgraph{
+        width:60%
+    }
+     #cireview-graph .progress{
+        width:60%
+    }
+     #cireview-graph .cireview-stars .rating-stars{
+        width:60%
+    }
+     .cireview-infomsg{
+        width:38%
+    }
+     .cireview-top .ci-custom-mat{
+        float:left;
+        width:75%
+    }
+     .cireview-top .outof{
+        float:left;
+        width:25%
+    }
+     .cireview-top .outof .trate{
+        font-size:60px;
+        line-height:normal;
+        font-weight:700
+    }
+     .cireview-top .outof .trate sup{
+        top:-2.5em;
+        font-size:16px;
+        color:#696868
+    }
+}
+ @media(max-width: 767px) {
+     #cireview-graph .cireviewgraph{
+        width:100%
+    }
+     #cireview-graph .progress{
+        width:44%
+    }
+     .cireview-infomsg{
+        width:100%
+    }
+     .cireview-top .outof .trate{
+        font-size:35px;
+        line-height:normal;
+        font-weight:700
+    }
+     .cireview-top .outof .trate sup{
+        top:-1.5em;
+        font-size:14px;
+        color:#696868
+    }
+     .cireview-abuse{
+        text-align:center;
+        padding-top:10px
+    }
+}

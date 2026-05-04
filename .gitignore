@@ -15,3 +15,16 @@ secrets.yaml
 
 # Backend volumes (only if you switch from named volumes to bind mounts)
 backend/data/
+
+# Pi setup credentials
+.pi-credentials
+
+# KiCad
+*-backups/
+*.kicad_prl
+_autosave-*.kicad_*
+fp-info-cache
+~*.lck
+*.bak
+*.bck
+.history/

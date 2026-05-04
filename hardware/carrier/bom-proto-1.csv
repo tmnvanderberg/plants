@@ -1,0 +1,7 @@
+"Reference","Qty","Value","DNP","Exclude from BOM","Exclude from Board","Footprint","Datasheet"
+"C1","1","100nF","","","","",""
+"J1","1","Moisture","","","","",""
+"J2","1","Light","","","","",""
+"J3","1","BAT","","","","",""
+"R1,R2","2","1M","","","","",""
+"U1","1","ESP32","","","","",""

@@ -33,4 +33,3 @@ Don't push a config you haven't validated. ESPHome OTA failures on a battery nod
 - New device YAML → `esphome/<device-name>.yaml`, with `packages: { base: !include common/base.yaml }`.
 - New shared snippet → `esphome/common/<topic>.yaml`, imported by name from device files.
 - New backend service → add to `backend/docker-compose.yml`, configs under `backend/<service>/`.
-- New phase doc → `docs/PHASE_X.md`, linked from README.

@@ -33,18 +33,8 @@ esphome run receiver.yaml --device plant-receiver.local   # OTA from now on
 ```sh
 cd backend
 cp .env.example .env                      # fill in
-docker compose up -d
+docker compose up -d                      # or `docker-compose up -d` on Bookworm (apt ships compose v1)
 ```
 
 Grafana on `:3000`, InfluxDB on `:8086`, Mosquitto on `:1883`.
 
-## Phases
-
-- **A** — Receiver online, OTA working, Mi Flora reference visible from receiver's intended location. → [docs/PHASE_A.md](docs/PHASE_A.md)
-- **B** — 15 sensor nodes deployed and reporting. → [docs/PHASE_B.md](docs/PHASE_B.md) (stub)
-
-## See also
-
-- [docs/BOM.md](docs/BOM.md)
-- [docs/WIRING.md](docs/WIRING.md)
-- [CLAUDE.md](CLAUDE.md) — read before vibe-coding edits
