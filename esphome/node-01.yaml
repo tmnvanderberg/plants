@@ -1,0 +1,20 @@
+# Sensor node 01 — first sensor-node bring-up.
+# No deep sleep yet; we want fast log feedback while validating sensors.
+# Once moisture + BH1750 read sanely, we'll add deep_sleep + battery
+# monitoring and replicate to nodes 02–15.
+
+substitutions:
+  device_name: plant-node-01
+  friendly_name: "Plant Node 01"
+  # MAC: E8:3D:C1:85:D0:6C
+  # Per-probe moisture calibration (recalibrate per node).
+  moisture_dry_v: "2.704"   # in air, vertical
+  moisture_wet_v: "0.936"   # submerged to etched line, n=2 mean
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+packages:
+  base: !include common/base.yaml
+  node: !include common/node.yaml

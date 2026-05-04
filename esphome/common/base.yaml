@@ -11,7 +11,7 @@ wifi:
 captive_portal:
 
 logger:
-  level: INFO
+  level: DEBUG
 
 api:
   encryption:

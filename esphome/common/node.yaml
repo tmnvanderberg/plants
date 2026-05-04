@@ -1,0 +1,150 @@
+# Shared sensor-node config — included by every node-NN.yaml via:
+#   packages:
+#     base: !include common/base.yaml
+#     node: !include common/node.yaml
+#
+# Devices must define ${device_name}, ${friendly_name}, and the per-probe
+# moisture calibration substitutions (${moisture_dry_v}, ${moisture_wet_v})
+# before importing. Pin map lives in hardware/README.md.
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+# C3-specific: route logs out the native USB-CDC port (the USB-C jack you flash
+# from), not UART0. Without this, the logger writes to floating UART pins.
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+# Flat-topic MQTT publish: plants/<device>/<sensor>. Birth/will give a heartbeat
+# we can graph (or use to alarm on dead nodes).
+mqtt:
+  broker: !secret mqtt_broker
+  port: 1883
+  discovery: false
+  birth_message:
+    topic: "plants/${device_name}/status"
+    payload: online
+  will_message:
+    topic: "plants/${device_name}/status"
+    payload: offline
+
+i2c:
+  sda: GPIO5
+  scl: GPIO6
+  scan: true     # logs detected addresses on first boot — handy for sanity
+
+# Both sensors (moisture probe + BH1750) share VCC on GPIO0. Driven always-on
+# for now; once deep_sleep lands this flips per-read so the probes (and their
+# on-board LEDs) draw nothing while the C3 is asleep.
+output:
+  - platform: gpio
+    pin: GPIO0
+    id: sensor_pwr_output
+
+switch:
+  - platform: output
+    name: "Sensor power"
+    output: sensor_pwr_output
+    restore_mode: ALWAYS_ON
+    internal: true
+
+sensor:
+  # Capacitive soil moisture v1.2 — analog out on GPIO 1 (ADC1_CH1).
+  #
+  # Robustness against an unplugged probe.
+  #
+  # The ADC pin floats when the probe is disconnected. Without help from the
+  # MCU it can settle to a "quiet" mid-rail bias (we observed ~1.85 V on the
+  # bench), which is indistinguishable from a real reading after smoothing.
+  # The fix is to force the pin to a known state when nothing is driving it,
+  # via the C3's internal ~45 kΩ pull-down on GPIO 1. When the probe is
+  # connected, its low-impedance output (~1 kΩ) wins and the reading is
+  # unaffected; when disconnected, the pull-down holds the pin at ~0 V and
+  # the plausibility filter drops the sample.
+  - platform: adc
+    pin:
+      number: GPIO1
+      mode:
+        input: true
+        pulldown: true
+    name: "Moisture (raw)"
+    id: moisture_v
+    state_topic: "plants/${device_name}/moisture_v"
+    update_interval: 15s
+    attenuation: 12db          # 0–3.3 V full scale on C3
+    accuracy_decimals: 3
+    unit_of_measurement: "V"
+    filters:
+      - lambda: |-
+          // Plausibility: dry-in-air ~2.7 V, fully submerged ~0.9 V.
+          // With the pull-down enabled, "no probe" pulls to ~0 V on the
+          // pin, but on a noisy breadboard with ~10 µA of leakage it can
+          // sit anywhere up to ~0.7 V; bench data confirmed 0.645 V.
+          // The wettest expected real reading is ~0.85 V (calibration is
+          // 0.936 V at "submerged to etched line"), so 0.80 V is a safe
+          // floor that still passes a soaking-wet pot.
+          if (x < 0.80f || x > 3.0f) return {};
+          return x;
+      - lambda: |-
+          // Belt-and-braces spread check: real soil moisture moves
+          // < 0.05 V over a 5-sample (75 s) window. Floating ADC noise
+          // can occasionally drift inside the plausibility band, so if
+          // the last 5 samples span more than 0.10 V, drop.
+          static float buf[5] = {NAN, NAN, NAN, NAN, NAN};
+          static int idx = 0;
+          buf[idx] = x;
+          idx = (idx + 1) % 5;
+          float lo = INFINITY, hi = -INFINITY;
+          int n = 0;
+          for (int k = 0; k < 5; k++) {
+            if (!std::isnan(buf[k])) {
+              if (buf[k] < lo) lo = buf[k];
+              if (buf[k] > hi) hi = buf[k];
+              n++;
+            }
+          }
+          if (n < 5) return x;          // warmup: pass through
+          if (hi - lo > 0.10f) return {}; // too jumpy: drop
+          return x;
+      - median:
+          window_size: 5
+          send_every: 5
+          send_first_at: 1
+
+  # Calibrated moisture % — derived from the raw ADC reading via the per-node
+  # calibration endpoints declared in node-NN.yaml.
+  - platform: copy
+    source_id: moisture_v
+    name: "Moisture"
+    id: moisture
+    state_topic: "plants/${device_name}/moisture"
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    filters:
+      - calibrate_linear:
+          method: exact
+          # from values must be ascending — wet (low V) before dry (high V).
+          datapoints:
+            - ${moisture_wet_v} -> 100.0
+            - ${moisture_dry_v} -> 0.0
+
+  # BH1750 ambient light — I²C, default address 0x23.
+  - platform: bh1750
+    name: "Light"
+    state_topic: "plants/${device_name}/light"
+    address: 0x23
+    update_interval: 15s
+    accuracy_decimals: 1
+
+  # Diagnostics — useful for picking placements that hold WiFi.
+  - platform: wifi_signal
+    name: "WiFi RSSI"
+    state_topic: "plants/${device_name}/wifi_rssi"
+    update_interval: 60s
+
+  - platform: uptime
+    name: "Uptime"
+    state_topic: "plants/${device_name}/uptime"
+    update_interval: 60s
