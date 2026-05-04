@@ -1,0 +1,413 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "datasource": { "type": "influxdb", "uid": "influxdb" },
+        "enable": true,
+        "iconColor": "rgba(0, 165, 255, 1)",
+        "name": "Waterings (auto-detected)",
+        "target": {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"moisture\" and r._field == \"value\" and r.device == \"${device}\")\n  |> derivative(unit: 5m, nonNegative: true, columns: [\"_value\"])\n  |> filter(fn: (r) => r._value > 10.0)\n  |> map(fn: (r) => ({_time: r._time, _value: r._value, text: \"watered (+\" + string(v: int(v: r._value)) + \"%/5m)\"}))"
+        }
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": null,
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 0 },
+      "id": 20,
+      "options": {
+        "mode": "html",
+        "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
+        "content": "<div style=\"display:flex;gap:24px;align-items:flex-start;padding:4px 8px;\">\n  <img src=\"http://plant-pi.local:8088/plant-node-01.jpg\" style=\"width:220px;border-radius:8px;flex-shrink:0;object-fit:cover;\">\n  <div style=\"flex:1;min-width:0;\">\n    <h2 style=\"margin:0 0 4px 0;\">Rattlesnake plant</h2>\n    <p style=\"margin:0 0 12px 0;opacity:0.85;\"><em>Goeppertia insignis</em> <span style=\"opacity:0.6;\">(formerly Calathea lancifolia)</span> &nbsp;&bull;&nbsp; profile <strong>constant-moist</strong> &nbsp;&bull;&nbsp; pot 1.5 L</p>\n    <h3 style=\"margin:0 0 6px 0;\">Care</h3>\n    <ul style=\"margin:0 0 8px 0;padding-left:20px;line-height:1.5;\">\n      <li><strong>Water:</strong> NL tap water is fine (no chlorine, no fluoride, ~8 &deg;dH). Rainwater is a bonus, not required.</li>\n      <li><strong>Soil:</strong> keep moist, never fully dry; aim 50&ndash;75 % moisture</li>\n      <li><strong>Light:</strong> bright <em>indirect</em>, ideal band ~500&ndash;5000 lx; direct sun bleaches the leaves</li>\n      <li><strong>Humidity:</strong> matters most in winter (heaters on, ~30 %). Watch the leaves; pebble tray or away from radiators if tips start crisping again.</li>\n      <li><strong>Watering style:</strong> small frequent top-ups; never deep-flood</li>\n    </ul>\n    <p style=\"margin:0;opacity:0.65;font-size:0.9em;\"><em>Brown leaf-tips visible at intake are historical winter damage (dry indoor air during heating season). With heaters off for spring, new growth should come in clean.</em></p>\n  </div>\n</div>"
+      },
+      "pluginVersion": "11.0.0",
+      "title": "",
+      "type": "text",
+      "transparent": true
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red",    "value": null },
+              { "color": "orange", "value": 40 },
+              { "color": "green",  "value": 50 },
+              { "color": "blue",   "value": 75 },
+              { "color": "red",    "value": 80 }
+            ]
+          },
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "noValue": "Sensor offline"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 10 },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value"
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: -10m)\n  |> filter(fn: (r) => r._measurement == \"moisture\" and r._field == \"value\" and r.device == \"${device}\")\n  |> last()\n  |> keep(columns: [\"_time\", \"_value\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Moisture now",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green",  "value": null },
+              { "color": "yellow", "value": 86400 },
+              { "color": "red",    "value": 345600 }
+            ]
+          },
+          "unit": "dtdurations"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 10 },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value"
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"moisture\" and r._field == \"value\" and r.device == \"${device}\")\n  |> derivative(unit: 5m, nonNegative: true, columns: [\"_value\"])\n  |> filter(fn: (r) => r._value > 10.0)\n  |> last()\n  |> map(fn: (r) => ({_time: r._time, _value: float(v: int(v: now()) - int(v: r._time)) / 1000000000.0}))\n  |> keep(columns: [\"_time\", \"_value\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Time since last watering",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            { "type": "value", "options": { "0": { "text": "no, already in range", "color": "green" } } }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green",  "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "orange", "value": 60 },
+              { "color": "red",    "value": 120 }
+            ]
+          },
+          "unit": "millilitre",
+          "decimals": 0,
+          "noValue": "Sensor offline"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 10 },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value"
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "// Watering recommendation for the constant-moist profile.\n// Target band [50, 75], aim for mid-band 62.5%.\n// pot_volume_l = 1.5, soil field capacity ~ 0.35 of pot volume.\n// volume_ml = 1.5 L * (62.5 - current%) / 100 * 0.35 * 1000  =  5.25 * (62.5 - current)\nfrom(bucket: \"sensors\")\n  |> range(start: -10m)\n  |> filter(fn: (r) => r._measurement == \"moisture\" and r._field == \"value\" and r.device == \"${device}\")\n  |> last()\n  |> map(fn: (r) => ({r with _value: 5.25 * (62.5 - r._value)}))\n  |> map(fn: (r) => ({r with _value: if r._value < 0.0 then 0.0 else r._value}))\n  |> keep(columns: [\"_time\", \"_value\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Water now (estimated ml)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red",    "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "yellow", "value": 200 },
+              { "color": "green",  "value": 500 },
+              { "color": "blue",   "value": 5000 },
+              { "color": "red",    "value": 50000 }
+            ]
+          },
+          "unit": "lux",
+          "decimals": 0,
+          "noValue": "Sensor offline"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 10 },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value"
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: -10m)\n  |> filter(fn: (r) => r._measurement == \"light\" and r._field == \"value\" and r.device == \"${device}\")\n  |> last()\n  |> keep(columns: [\"_time\", \"_value\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Light now",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red",    "value": null },
+              { "color": "orange", "value": 40 },
+              { "color": "green",  "value": 50 },
+              { "color": "blue",   "value": 75 },
+              { "color": "red",    "value": 80 }
+            ]
+          },
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "pointSize": 4,
+            "showPoints": "never",
+            "thresholdsStyle": { "mode": "dashed+area" }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 14 },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull", "min", "max", "mean"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"moisture\" and r._field == \"value\" and r.device == \"${device}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"device\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Moisture %, bands: dry / drying / ideal / wet",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "yellow" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red",    "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "yellow", "value": 200 },
+              { "color": "green",  "value": 500 },
+              { "color": "blue",   "value": 5000 },
+              { "color": "red",    "value": 50000 }
+            ]
+          },
+          "unit": "lux",
+          "min": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 15,
+            "pointSize": 4,
+            "showPoints": "never",
+            "scaleDistribution": { "type": "log", "log": 10 },
+            "thresholdsStyle": { "mode": "dashed" }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
+      "id": 31,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull", "min", "max", "mean"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"light\" and r._field == \"value\" and r.device == \"${device}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"device\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Light (lx, log scale), bands: dark / dim / OK / bright / sun",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] },
+          "unit": "volt",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+      "id": 2,
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"moisture_v\" and r._field == \"value\" and r.device == \"${device}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"device\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Moisture (raw V), diagnostic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red",   "value": null },
+              { "color": "green", "value": -75 }
+            ]
+          },
+          "unit": "dBm",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+      "id": 3,
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdb" },
+          "query": "from(bucket: \"sensors\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"wifi_rssi\" and r._field == \"value\" and r.device == \"${device}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> keep(columns: [\"_time\", \"_value\", \"device\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "WiFi RSSI",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["plants"],
+  "templating": {
+    "list": [
+      {
+        "name": "device",
+        "label": "Plant",
+        "type": "query",
+        "datasource": { "type": "influxdb", "uid": "influxdb" },
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"sensors\", tag: \"device\", predicate: (r) => r._measurement == \"moisture\")",
+        "refresh": 1,
+        "sort": 1,
+        "multi": false,
+        "includeAll": false,
+        "options": [],
+        "current": { "selected": false, "value": "plant-node-01", "text": "plant-node-01" }
+      }
+    ]
+  },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Plant Status",
+  "uid": "plant-status",
+  "version": 1,
+  "weekStart": ""
+}

@@ -1,0 +1,30 @@
+apiVersion: 1
+
+contactPoints:
+  - orgId: 1
+    name: telegram
+    receivers:
+      - uid: telegram
+        type: telegram
+        settings:
+          # Bot token comes from .env (it's sensitive — anyone with it can speak as the bot).
+          # Chat ID is hardcoded here: Grafana 11.0 has a substitution bug that re-types
+          # numeric env values as int and breaks JSON unmarshal into the chatid string field.
+          # Chat IDs aren't really secret (useless without the token), so this is fine.
+          bottoken: "${TELEGRAM_BOT_TOKEN}"
+          chatid: "73490733"
+          parse_mode: HTML
+          disable_web_page_preview: false
+          # The link preview at the top of the message renders the plant photo.
+          # Care + dynamic facts come from the alert rule's annotations.
+          message: |-
+            {{ if eq .Status "firing" -}}
+            🌿 <b>Water {{ .CommonLabels.device }}</b>
+            {{- else -}}
+            ✅ <b>{{ .CommonLabels.device }} watered</b>
+            {{- end }}
+
+            <a href="http://plant-pi.local:8088/{{ .CommonLabels.device }}.jpg">📷</a>
+
+            {{ index .CommonAnnotations "description" }}
+        disableResolveMessage: false

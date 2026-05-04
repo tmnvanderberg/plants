@@ -1,0 +1,131 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: Plant Watering
+    folder: Plants
+    interval: 5m
+    rules:
+      # --------------------------------------------------------------------
+      # DRY: water-now alert
+      # Profile constant-moist, alarm_below_pct=40, alarm_dry_h=2.
+      # The 75 s median on the sensor side already filters single-sample
+      # noise, so a 2 h dwell is enough to confirm a real downward trend
+      # without making you wait half a day.
+      # --------------------------------------------------------------------
+      - uid: water-plant-node-01
+        title: Time to water plant-node-01
+        condition: B
+        for: 2h
+        noDataState: OK
+        execErrState: OK
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: influxdb
+            model:
+              datasource:
+                type: influxdb
+                uid: influxdb
+              query: |
+                from(bucket: "sensors")
+                  |> range(start: -10m)
+                  |> filter(fn: (r) => r._measurement == "moisture" and r._field == "value" and r.device == "plant-node-01")
+                  |> mean()
+              refId: A
+              intervalMs: 60000
+              maxDataPoints: 1
+          - refId: B
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              datasource:
+                type: __expr__
+                uid: __expr__
+              type: threshold
+              expression: A
+              refId: B
+              conditions:
+                - evaluator:
+                    type: lt
+                    params: [40]
+        annotations:
+          summary: "Rattlesnake plant moisture has been below 40 % for 2 h"
+          description: |-
+            <b>What to do:</b>
+            • Water with <b>distilled or rainwater</b> (NL Vitens water OK in Zwolle, but rain is gentler on the leaves).
+            • Aim for <b>50–75 %</b> soil moisture.
+            • Small top-up — pour around the base, let it absorb, repeat if it runs straight through.
+            • Open the dashboard for the suggested ml volume.
+
+            <i>Pot:</i> 1.5 L &nbsp; <i>Profile:</i> constant-moist
+        labels:
+          severity: warning
+          device: plant-node-01
+
+      # --------------------------------------------------------------------
+      # WET: drainage / overwatering alert
+      # Profile constant-moist, alarm_above_pct=80, alarm_wet_h=24.
+      # Post-watering readings briefly hit 75–80% and then drain. Only
+      # persistent saturation (>80% for 24h) means a drainage problem
+      # (clogged hole, saucer pooling, etc) — root rot is the slow risk.
+      # --------------------------------------------------------------------
+      - uid: too-wet-plant-node-01
+        title: plant-node-01 has been waterlogged
+        condition: B
+        for: 24h
+        noDataState: OK
+        execErrState: OK
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: influxdb
+            model:
+              datasource:
+                type: influxdb
+                uid: influxdb
+              query: |
+                from(bucket: "sensors")
+                  |> range(start: -10m)
+                  |> filter(fn: (r) => r._measurement == "moisture" and r._field == "value" and r.device == "plant-node-01")
+                  |> mean()
+              refId: A
+              intervalMs: 60000
+              maxDataPoints: 1
+          - refId: B
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              datasource:
+                type: __expr__
+                uid: __expr__
+              type: threshold
+              expression: A
+              refId: B
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [80]
+        annotations:
+          summary: "Rattlesnake plant has been above 80 % moisture for 24 h"
+          description: |-
+            <b>What to check:</b>
+            • <b>Drainage hole</b> at the bottom of the pot — is it clogged?
+            • <b>Saucer</b> — pooled water sitting under the pot? Empty it.
+            • <b>Soil compaction</b> — has the soil gone airless? Aerate gently with a chopstick.
+            • Skip the next watering until the reading drops back into 50–75 %.
+
+            Persistent saturation eventually causes root rot. No need to panic — you've got days, not hours.
+
+            <i>Pot:</i> 1.5 L &nbsp; <i>Profile:</i> constant-moist
+        labels:
+          severity: warning
+          device: plant-node-01

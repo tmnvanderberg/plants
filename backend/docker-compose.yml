@@ -36,24 +36,38 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}                       # consumed by datasource provisioning
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}         # consumed by alerting contact-point
+      TELEGRAM_CHAT_ID:   ${TELEGRAM_CHAT_ID:-}           # consumed by alerting contact-point
     volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
     depends_on:
       - influxdb
 
-  # MQTT -> InfluxDB bridge. Uncomment + add ./telegraf/telegraf.conf once Phase B
-  # nodes start publishing to plants/<device>/<sensor>.
-  # telegraf:
-  #   image: telegraf:1.30
-  #   container_name: telegraf
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-  #   environment:
-  #     INFLUX_TOKEN: ${INFLUX_TOKEN}
-  #   depends_on:
-  #     - mosquitto
-  #     - influxdb
+  telegraf:
+    image: telegraf:1.30
+    container_name: telegraf
+    restart: unless-stopped
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    environment:
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+    depends_on:
+      - mosquitto
+      - influxdb
+
+  # Tiny static-file server for plant photos (referenced from Grafana text panels).
+  # Drop images into ./images/<device>.jpg — served at http://<host>:8088/<device>.jpg.
+  images:
+    image: caddy:2-alpine
+    container_name: plant-images
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    volumes:
+      - ./images:/srv:ro
+    command: caddy file-server --root /srv --listen :80 --browse
 
 volumes:
   mosquitto_data:
